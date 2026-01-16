@@ -1,5 +1,5 @@
 import Masthead from "@/components/Masthead";
-import ModelFeatureCard from "@/components/ModelFeatureCard";
+import Leaderboard from "@/components/Leaderboard";
 import PaperBridgeCard from "@/components/PaperBridgeCard";
 import CategoryPanel from "@/components/CategoryPanel";
 import LiftLadderChart from "@/components/charts/LiftLadderChart";
@@ -105,8 +105,6 @@ export default async function HomePage() {
       .sort((a, b) => b.repos.length - a.repos.length || (b.citations ?? 0) - (a.citations ?? 0))[0] ??
     null;
   const showDaily = scored.some((model) => model.series.length > 0);
-  const coolingCategory = categoryCooling[0]?.label ?? null;
-  const trendingCategory = trendingList[0] ? tagLabelMap[trendingList[0]] : null;
 
   return (
     <div className="min-h-screen bg-[color:var(--paper)]">
@@ -128,93 +126,7 @@ export default async function HomePage() {
       <div className="mx-auto max-w-6xl px-6">
         {/* Leaderboard Section - Main Focus */}
         <section className="py-12">
-          <div className="mb-8 flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-[color:var(--ink)]">Leaderboard</h2>
-              <p className="mt-1 text-[color:var(--muted)]">Ranked by frontier score</p>
-            </div>
-            <div className="flex gap-2">
-              <select className="rounded-lg border border-[color:var(--border)] bg-white px-3 py-2 text-sm font-medium text-[color:var(--ink)] transition hover:border-[color:var(--accent)]">
-                <option>Frontier Score</option>
-                <option>Downloads/Day</option>
-                <option>Momentum</option>
-              </select>
-              <select className="rounded-lg border border-[color:var(--border)] bg-white px-3 py-2 text-sm font-medium text-[color:var(--ink)] transition hover:border-[color:var(--accent)]">
-                <option>All time</option>
-                <option>This week</option>
-                <option>Today</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Leaderboard Table */}
-          <div className="overflow-x-auto rounded-[16px] border border-[color:var(--border)] bg-white shadow-sm">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-[color:var(--border)]">
-                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
-                    Rank
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
-                    Model
-                  </th>
-                  <th className="hidden px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)] sm:table-cell">
-                    Velocity
-                  </th>
-                  <th className="hidden px-6 py-4 text-right text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)] lg:table-cell">
-                    Lift
-                  </th>
-                  <th className="hidden px-6 py-4 text-right text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)] lg:table-cell">
-                    Momentum
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {frontierModels.slice(0, 10).map((model, idx) => (
-                  <tr
-                    key={model.id}
-                    className="border-b border-[color:var(--border)] transition hover:bg-[color:var(--paper-2)]"
-                  >
-                    <td className="px-6 py-4">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--paper-2)] font-bold text-[color:var(--ink)]">
-                        {idx + 1}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div>
-                        <p className="font-semibold text-[color:var(--ink)]">{model.id}</p>
-                        <p className="mt-0.5 text-xs text-[color:var(--muted)]">{model.trendLabel}</p>
-                      </div>
-                    </td>
-                    <td className="hidden px-6 py-4 sm:table-cell">
-                      <p className="font-semibold text-[color:var(--ink)]">{formatNumber(model.velocity, 1)}</p>
-                      <p className="text-xs text-[color:var(--muted)]">/day</p>
-                    </td>
-                    <td className="hidden px-6 py-4 text-right lg:table-cell">
-                      <span className="inline-block rounded-full bg-[color:var(--paper-2)] px-3 py-1 font-semibold text-[color:var(--accent-2)]">
-                        {formatNumber(model.lift, 1)}x
-                      </span>
-                    </td>
-                    <td className="hidden px-6 py-4 text-right lg:table-cell">
-                      <p className="font-medium text-[color:var(--ink)]">{formatNumber(model.momentumRatio * 100, 0)}%</p>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <Button variant="outline" size="sm" asChild>
-                        <Link href={`/models/${model.id}`}>View</Link>
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <Button asChild variant="outline" className="mt-6 w-full">
-            <Link href="/trends">View All {frontierModels.length} Models →</Link>
-          </Button>
+          <Leaderboard models={scored} />
         </section>
 
         {/* Quick Stats */}
