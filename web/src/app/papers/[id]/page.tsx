@@ -26,7 +26,7 @@ export default async function PaperDetailPage({
 
   return (
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-6 pb-12 pt-6">
-      <Masthead updatedAt={new Date().toISOString()} compact />
+      <Masthead updatedAt={new Date().toISOString()} />
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
         <div className="rounded-[16px] border border-[color:var(--border)] bg-[color:var(--card)]">
