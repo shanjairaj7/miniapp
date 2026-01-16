@@ -109,240 +109,308 @@ export default async function HomePage() {
   const trendingCategory = trendingList[0] ? tagLabelMap[trendingList[0]] : null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[color:var(--paper)] via-white to-[color:var(--paper)]">
+    <div className="min-h-screen bg-[color:var(--paper)]">
       <Masthead updatedAt={updatedAt} />
 
-      <div className="mx-auto max-w-6xl px-6 pb-20 pt-12">
-        {/* Hero Section */}
-        <section className="mb-16 text-center">
-          <div className="mb-4 inline-block rounded-full border border-[color:var(--border)] bg-[color:var(--paper-2)] px-4 py-2">
+      {/* Hero Section - The Hook */}
+      <section className="border-b border-[color:var(--border)] bg-gradient-to-b from-white to-[color:var(--paper)]">
+        <div className="mx-auto max-w-6xl px-6 py-20 text-center">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--paper-2)] px-4 py-2">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-pulse rounded-full bg-[color:var(--accent)]"></span>
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[color:var(--accent)]"></span>
+            </span>
             <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
-              Updated {formatDate(updatedAt)}
+              Live Data • Updated Today
             </p>
           </div>
-          <h2 className="text-4xl font-bold text-[color:var(--ink)] md:text-5xl">
-            The AI Model Frontier, Live
-          </h2>
-          <p className="mt-4 text-lg text-[color:var(--muted)]">
-            Real-time insights into breakthrough models, emerging research, and what's gaining momentum.
+
+          <h1 className="text-5xl font-bold leading-tight text-[color:var(--ink)] md:text-6xl">
+            Know what's happening in <span className="text-[color:var(--accent)]">AI right now</span>
+          </h1>
+
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-[color:var(--muted)]">
+            Stop guessing about emerging models. Watch the frontier evolve in real-time. See what researchers are building, which models are accelerating, and what's about to matter.
           </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button asChild size="lg">
-              <Link href="/trends">Explore Dashboard</Link>
+
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Button size="lg" asChild>
+              <Link href="/trends">Start Exploring →</Link>
             </Button>
-            <Button variant="outline" asChild size="lg">
-              <Link href="/papers">Latest Research</Link>
+            <Button variant="outline" size="lg" asChild>
+              <Link href="/papers">Read Latest Research</Link>
             </Button>
           </div>
-        </section>
 
-        {/* Quick Insights Grid */}
-        <section className="mb-16">
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-[16px] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
-                    🚀 Breakouts
-                  </p>
-                  <p className="mt-2 text-2xl font-bold text-[color:var(--ink)]">{breakoutFocus.length}</p>
-                  <p className="mt-1 text-sm text-[color:var(--muted)]">Models gaining momentum</p>
-                </div>
+          <p className="mt-6 text-sm text-[color:var(--muted)]">
+            {historyStats.days}+ days of momentum data • {scored.length}+ models tracked • Daily updates
+          </p>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-6xl px-6">
+        {/* What's Happening - The Narrative */}
+        <section className="py-16">
+          <div className="mb-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent)]">Right Now</p>
+            <h2 className="mt-2 text-3xl font-bold text-[color:var(--ink)]">What's moving the needle today</h2>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-3">
+            {/* Breakouts */}
+            <div className="rounded-[16px] border border-[color:var(--border)] bg-white p-6 shadow-sm">
+              <div className="mb-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent-2)]">
+                  🚀 Accelerating
+                </p>
+                <p className="mt-2 text-lg font-semibold text-[color:var(--ink)]">Models Gaining Traction</p>
               </div>
-              <div className="mt-4 space-y-2">
+              <p className="text-sm text-[color:var(--muted)]">
+                {breakoutFocus.length > 0
+                  ? `${breakoutFocus.length} models breaking out this week`
+                  : "Watch for models that are accelerating"}
+              </p>
+              <div className="mt-4 space-y-2 border-t border-[color:var(--border)] pt-4">
                 {breakoutFocus.map((model) => (
                   <Link
                     key={model.id}
                     href={`/models/${model.id}`}
-                    className="block truncate text-sm font-semibold text-[color:var(--accent)] hover:underline"
+                    className="group block rounded-lg border border-transparent px-3 py-2 text-sm font-medium text-[color:var(--accent)] transition hover:border-[color:var(--border)] hover:bg-[color:var(--paper-2)]"
                   >
-                    {model.id}
+                    <span className="group-hover:underline">{model.id}</span>
+                    <span className="ml-2 text-xs text-[color:var(--muted)]">
+                      +{formatNumber(model.acceleration, 0)}%
+                    </span>
                   </Link>
                 ))}
               </div>
             </div>
 
-            <div className="rounded-[16px] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
-                    ✨ Fresh Arrivals
-                  </p>
-                  <p className="mt-2 text-2xl font-bold text-[color:var(--ink)]">{newFocus.length}</p>
-                  <p className="mt-1 text-sm text-[color:var(--muted)]">New models this week</p>
-                </div>
+            {/* New Models */}
+            <div className="rounded-[16px] border border-[color:var(--border)] bg-white p-6 shadow-sm">
+              <div className="mb-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent-3)]">
+                  ✨ New
+                </p>
+                <p className="mt-2 text-lg font-semibold text-[color:var(--ink)]">Fresh Arrivals</p>
               </div>
-              <div className="mt-4 space-y-2">
+              <p className="text-sm text-[color:var(--muted)]">
+                {newFocus.length > 0 ? `${newFocus.length} models debuted this week` : "First look at new models"}
+              </p>
+              <div className="mt-4 space-y-2 border-t border-[color:var(--border)] pt-4">
                 {newFocus.map((model) => (
                   <Link
                     key={model.id}
                     href={`/models/${model.id}`}
-                    className="block truncate text-sm font-semibold text-[color:var(--accent)] hover:underline"
+                    className="group block rounded-lg border border-transparent px-3 py-2 text-sm font-medium text-[color:var(--accent)] transition hover:border-[color:var(--border)] hover:bg-[color:var(--paper-2)]"
                   >
-                    {model.id}
+                    <span className="group-hover:underline">{model.id}</span>
+                    <span className="ml-2 text-xs text-[color:var(--muted)]">
+                      {formatNumber(model.velocity, 1)}/day
+                    </span>
                   </Link>
                 ))}
               </div>
             </div>
 
-            <div className="rounded-[16px] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
-                    📊 Insights
-                  </p>
-                  <p className="mt-2 text-2xl font-bold text-[color:var(--ink)]">{historyStats.days}</p>
-                  <p className="mt-1 text-sm text-[color:var(--muted)]">Days of momentum data</p>
-                </div>
+            {/* Signal Briefing */}
+            <div className="rounded-[16px] border border-[color:var(--border)] bg-white p-6 shadow-sm">
+              <div className="mb-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
+                  📊 Signals
+                </p>
+                <p className="mt-2 text-lg font-semibold text-[color:var(--ink)]">Momentum Briefing</p>
               </div>
-              <div className="mt-4">
-                {coolingCategory ? (
-                  <p className="text-sm text-[color:var(--muted)]">
-                    <span className="font-semibold text-[color:var(--ink)]">{coolingCategory}</span> is cooling
-                  </p>
-                ) : trendingCategory ? (
-                  <p className="text-sm text-[color:var(--muted)]">
-                    <span className="font-semibold text-[color:var(--ink)]">{trendingCategory}</span> is surging
-                  </p>
-                ) : (
-                  <p className="text-sm text-[color:var(--muted)]">Building data...</p>
-                )}
+              {coolingCategory || trendingCategory ? (
+                <p className="text-sm text-[color:var(--muted)]">
+                  {coolingCategory && (
+                    <>
+                      <span className="font-medium text-[color:var(--ink)]">{coolingCategory}</span> is cooling — shift
+                      coming?
+                    </>
+                  )}
+                  {trendingCategory && !coolingCategory && (
+                    <>
+                      <span className="font-medium text-[color:var(--ink)]">{trendingCategory}</span> is the hottest
+                      category right now
+                    </>
+                  )}
+                </p>
+              ) : (
+                <p className="text-sm text-[color:var(--muted)]">Building signal data... Check back soon</p>
+              )}
+              <div className="mt-4 flex flex-wrap gap-2 border-t border-[color:var(--border)] pt-4">
+                {trendingList.slice(0, 3).map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/categories/${tag}`}
+                    className="rounded-full border border-[color:var(--border)] bg-[color:var(--paper-2)] px-3 py-1 text-xs font-medium text-[color:var(--muted)] transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
+                  >
+                    {tagLabelMap[tag] ?? tag}
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* Main Content Grid */}
-        <section className="mb-16 grid gap-8 lg:grid-cols-3">
-          {/* Frontier Models */}
-          <div className="lg:col-span-2">
-            <div className="mb-6">
-              <h3 className="text-2xl font-bold text-[color:var(--ink)]">Frontier Models</h3>
-              <p className="mt-1 text-[color:var(--muted)]">
-                The highest-scoring models by frontierScore metrics
-              </p>
-            </div>
-            <div className="space-y-3">
-              {frontierModels.map((model) => (
-                <Link
-                  key={model.id}
-                  href={`/models/${model.id}`}
-                  className="group block rounded-[14px] border border-[color:var(--border)] bg-[color:var(--card)] p-5 shadow-sm transition hover:border-[color:var(--accent)] hover:shadow-md"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-[color:var(--ink)] group-hover:text-[color:var(--accent)]">
-                        {model.id}
-                      </h4>
-                      <div className="mt-2 flex flex-wrap items-center gap-2">
-                        <Badge variant="secondary">{model.trendLabel}</Badge>
-                        <span className="text-xs text-[color:var(--muted)]">
-                          {formatNumber(model.velocity, 1)}/day
-                        </span>
-                        <span className="text-xs font-semibold text-[color:var(--accent-2)]">
-                          ↑ {formatNumber(model.lift, 1)}x
-                        </span>
-                        <span className="text-xs text-[color:var(--muted)]">
-                          {formatNumber(model.momentumRatio * 100, 0)}% momentum
-                        </span>
+        {/* Frontier Models - The Main Event */}
+        <section className="border-y border-[color:var(--border)] py-16">
+          <div className="mb-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent)]">Top Tier</p>
+            <h2 className="mt-2 text-3xl font-bold text-[color:var(--ink)]">Models you should know about</h2>
+            <p className="mt-2 text-[color:var(--muted)]">Ranked by frontier score — what really matters</p>
+          </div>
+
+          <div className="space-y-3">
+            {frontierModels.map((model, idx) => (
+              <Link
+                key={model.id}
+                href={`/models/${model.id}`}
+                className="group relative overflow-hidden rounded-[16px] border border-[color:var(--border)] bg-white shadow-sm transition hover:border-[color:var(--accent)] hover:shadow-md"
+              >
+                <div className="flex items-center justify-between gap-6 p-6">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--paper-2)] text-sm font-bold text-[color:var(--ink)]">
+                        {idx + 1}
+                      </span>
+                      <div>
+                        <h3 className="font-semibold text-[color:var(--ink)] group-hover:text-[color:var(--accent)]">
+                          {model.id}
+                        </h3>
+                        <p className="mt-1 text-xs text-[color:var(--muted)]">
+                          {formatNumber(model.velocity, 1)} downloads/day •{" "}
+                          <span className="font-medium text-[color:var(--accent-2)]">
+                            {formatNumber(model.lift, 1)}x lift
+                          </span>
+                        </p>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href={`/models/${model.id}`}>View</Link>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div className="hidden flex-col items-end sm:flex">
+                      <Badge variant="secondary">{model.trendLabel}</Badge>
+                      <p className="mt-2 text-xs text-[color:var(--muted)]">
+                        {formatNumber(model.momentumRatio * 100, 0)}% momentum
+                      </p>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      View Details
                     </Button>
                   </div>
-                </Link>
-              ))}
-            </div>
-            <div className="mt-6">
-              <Button asChild variant="outline" className="w-full">
-                <Link href="/trends">See All Models →</Link>
-              </Button>
-            </div>
+                </div>
+              </Link>
+            ))}
           </div>
 
-          {/* Research Spotlight */}
-          <div>
-            <div className="mb-6">
-              <h3 className="text-2xl font-bold text-[color:var(--ink)]">Research Spotlight</h3>
-              <p className="mt-1 text-[color:var(--muted)]">Featured papers with impact</p>
+          <Button asChild variant="outline" className="mt-8 w-full">
+            <Link href="/trends">Explore Full Leaderboard →</Link>
+          </Button>
+        </section>
+
+        {/* Research & Implementation */}
+        <section className="py-16">
+          <div className="grid gap-8 lg:grid-cols-2">
+            {/* Papers */}
+            <div>
+              <div className="mb-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent)]">
+                  Research
+                </p>
+                <h3 className="mt-2 text-2xl font-bold text-[color:var(--ink)]">Latest from arXiv</h3>
+              </div>
+              {leadPaper ? (
+                <div className="rounded-[16px] border border-[color:var(--border)] bg-white shadow-sm">
+                  <PaperBridgeCard
+                    paper={leadPaper.paper}
+                    repos={leadPaper.repos}
+                    citations={leadPaper.citations}
+                  />
+                </div>
+              ) : (
+                <div className="rounded-[14px] border border-[color:var(--border)] bg-[color:var(--paper-2)] p-8 text-center">
+                  <p className="text-sm text-[color:var(--muted)]">Loading latest papers...</p>
+                </div>
+              )}
+              <Button asChild variant="outline" className="mt-4 w-full">
+                <Link href="/papers">More Papers →</Link>
+              </Button>
             </div>
-            {leadPaper ? (
-              <div className="rounded-[16px] border border-[color:var(--border)] bg-[color:var(--card)] shadow-sm">
-                <PaperBridgeCard
-                  paper={leadPaper.paper}
-                  repos={leadPaper.repos}
-                  citations={leadPaper.citations}
-                />
+
+            {/* Deployable */}
+            <div>
+              <div className="mb-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent)]">
+                  Ready to Use
+                </p>
+                <h3 className="mt-2 text-2xl font-bold text-[color:var(--ink)]">Frontier models you can run</h3>
               </div>
-            ) : (
-              <div className="rounded-[14px] border border-[color:var(--border)] bg-[color:var(--paper-2)] p-6 text-center">
-                <p className="text-sm text-[color:var(--muted)]">Loading research data...</p>
+              <div className="rounded-[16px] border border-[color:var(--border)] bg-white p-6 shadow-sm">
+                <p className="text-3xl font-bold text-[color:var(--accent)]">{deployableModels.length}</p>
+                <p className="mt-2 text-sm text-[color:var(--muted)]">
+                  Top models with live inference endpoints, quantized versions, or commercial APIs ready to go
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2 border-t border-[color:var(--border)] pt-4">
+                  {deployableModels.slice(0, 3).map((model) => (
+                    <Link
+                      key={model.id}
+                      href={`/models/${model.id}`}
+                      className="rounded-lg border border-[color:var(--border)] bg-[color:var(--paper-2)] px-3 py-2 text-xs font-medium text-[color:var(--ink)] transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
+                    >
+                      {model.id}
+                    </Link>
+                  ))}
+                  {deployableModels.length > 3 && (
+                    <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--paper-2)] px-3 py-2 text-xs font-medium text-[color:var(--muted)]">
+                      +{deployableModels.length - 3} more
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-            <Button asChild variant="outline" className="mt-4 w-full">
-              <Link href="/papers">Browse Papers →</Link>
-            </Button>
+            </div>
           </div>
         </section>
 
-        {/* Momentum Charts */}
-        <section className="mb-16">
-          <div className="mb-6">
-            <h3 className="text-2xl font-bold text-[color:var(--ink)]">{showDaily ? "Daily Changes" : "Momentum Baseline"}</h3>
-            <p className="mt-1 text-[color:var(--muted)]">
+        {/* Charts */}
+        <section className="border-t border-[color:var(--border)] py-16">
+          <div className="mb-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent)]">
+              Momentum Signals
+            </p>
+            <h2 className="mt-2 text-3xl font-bold text-[color:var(--ink)]">
+              {showDaily ? "What shifted today" : "Baseline momentum"}
+            </h2>
+            <p className="mt-2 text-[color:var(--muted)]">
               {showDaily
-                ? "Real day-over-day velocity shifts across the frontier"
-                : "Initial breakout speed vs. historical baseline"}
+                ? "Real day-over-day velocity changes — see the shifts as they happen"
+                : "Initial breakout velocity vs. historical baseline — early indicators of strength"}
             </p>
           </div>
-          <div className="rounded-[16px] border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-sm">
+          <div className="rounded-[16px] border border-[color:var(--border)] bg-white p-6 shadow-sm">
             {showDaily ? <DailyDeltaChart models={scored} /> : <LiftLadderChart models={scored} />}
           </div>
         </section>
 
-        {/* Categories Explore */}
-        <section className="mb-16">
-          <div className="mb-6">
-            <h3 className="text-2xl font-bold text-[color:var(--ink)]">Explore by Category</h3>
-            <p className="mt-1 text-[color:var(--muted)]">
-              See which domains are accelerating or cooling down
-            </p>
+        {/* Categories */}
+        <section className="border-t border-[color:var(--border)] py-16">
+          <div className="mb-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent)]">Categories</p>
+            <h2 className="mt-2 text-3xl font-bold text-[color:var(--ink)]">Which domains are accelerating</h2>
           </div>
           <CategoryPanel groups={groups} />
         </section>
 
-        {/* Key Metrics */}
-        <section className="mb-16">
-          <div className="grid gap-6 md:grid-cols-3">
-            <div className="rounded-[16px] border border-[color:var(--border)] bg-gradient-to-br from-[color:var(--card)] to-[color:var(--paper-2)] p-6 shadow-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
-                Ready to Deploy
-              </p>
-              <p className="mt-3 text-3xl font-bold text-[color:var(--accent)]">{deployableModels.length}</p>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Models with live inference endpoints & formats
-              </p>
-            </div>
-            <div className="rounded-[16px] border border-[color:var(--border)] bg-gradient-to-br from-[color:var(--card)] to-[color:var(--paper-2)] p-6 shadow-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
-                Paper-to-Code Bridge
-              </p>
-              <p className="mt-3 text-3xl font-bold text-[color:var(--accent-2)]">{paperBridge.length}</p>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Daily papers linked to implementations & repos
-              </p>
-            </div>
-            <div className="rounded-[16px] border border-[color:var(--border)] bg-gradient-to-br from-[color:var(--card)] to-[color:var(--paper-2)] p-6 shadow-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
-                Trending Categories
-              </p>
-              <p className="mt-3 text-3xl font-bold text-[color:var(--accent-3)]">{trendingList.length}</p>
-              <p className="mt-2 text-sm text-[color:var(--muted)]">
-                Active domains by momentum score
-              </p>
-            </div>
-          </div>
+        {/* CTA Section */}
+        <section className="border-t border-[color:var(--border)] py-16 text-center">
+          <h2 className="text-3xl font-bold text-[color:var(--ink)]">Stay ahead of the frontier</h2>
+          <p className="mt-4 text-lg text-[color:var(--muted)]">
+            Bookmark this. Check it daily. Know what matters before everyone else.
+          </p>
+          <Button size="lg" asChild className="mt-8">
+            <Link href="/trends">Dive into the data →</Link>
+          </Button>
         </section>
       </div>
     </div>
