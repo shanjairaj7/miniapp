@@ -43,7 +43,7 @@ export default async function HomePage() {
 
   const frontierModels = [...scored]
     .sort((a, b) => b.frontierScore - a.frontierScore)
-    .slice(0, 6);
+    .slice(0, 20);
   const breakouts = [...scored]
     .filter((model) => model.acceleration > 0)
     .sort((a, b) => b.acceleration - a.acceleration)
@@ -112,281 +112,161 @@ export default async function HomePage() {
     <div className="min-h-screen bg-[color:var(--paper)]">
       <Masthead updatedAt={updatedAt} />
 
-      {/* Hero Section - The Hook */}
-      <section className="border-b border-[color:var(--border)] bg-gradient-to-b from-white to-[color:var(--paper)]">
-        <div className="mx-auto max-w-6xl px-6 py-20 text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-[color:var(--paper-2)] px-4 py-2">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-pulse rounded-full bg-[color:var(--accent)]"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[color:var(--accent)]"></span>
-            </span>
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
-              Live Data • Updated Today
-            </p>
-          </div>
-
-          <h1 className="text-5xl font-bold leading-tight text-[color:var(--ink)] md:text-6xl">
-            Know what's happening in <span className="text-[color:var(--accent)]">AI right now</span>
+      {/* Hero Section with Bold Title */}
+      <section className="border-b border-[color:var(--border)] bg-white py-12">
+        <div className="mx-auto max-w-6xl px-6">
+          <h1 className="font-mono text-5xl font-black leading-tight text-[color:var(--ink)] md:text-6xl lg:text-7xl">
+            The frontier of AI models
           </h1>
-
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-[color:var(--muted)]">
-            Stop guessing about emerging models. Watch the frontier evolve in real-time. See what researchers are building, which models are accelerating, and what's about to matter.
-          </p>
-
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button size="lg" asChild>
-              <Link href="/trends">Start Exploring →</Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/papers">Read Latest Research</Link>
-            </Button>
-          </div>
-
-          <p className="mt-6 text-sm text-[color:var(--muted)]">
-            {historyStats.days}+ days of momentum data • {scored.length}+ models tracked • Daily updates
+          <p className="mt-6 max-w-2xl text-lg text-[color:var(--muted)]">
+            Real-time leaderboard of what's breaking through. Track momentum, velocity, and adoption across the entire
+            model ecosystem.
           </p>
         </div>
       </section>
 
       <div className="mx-auto max-w-6xl px-6">
-        {/* What's Happening - The Narrative */}
-        <section className="py-16">
-          <div className="mb-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent)]">Right Now</p>
-            <h2 className="mt-2 text-3xl font-bold text-[color:var(--ink)]">What's moving the needle today</h2>
+        {/* Leaderboard Section - Main Focus */}
+        <section className="py-12">
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-[color:var(--ink)]">Leaderboard</h2>
+              <p className="mt-1 text-[color:var(--muted)]">Ranked by frontier score</p>
+            </div>
+            <div className="flex gap-2">
+              <select className="rounded-lg border border-[color:var(--border)] bg-white px-3 py-2 text-sm font-medium text-[color:var(--ink)] transition hover:border-[color:var(--accent)]">
+                <option>Frontier Score</option>
+                <option>Downloads/Day</option>
+                <option>Momentum</option>
+              </select>
+              <select className="rounded-lg border border-[color:var(--border)] bg-white px-3 py-2 text-sm font-medium text-[color:var(--ink)] transition hover:border-[color:var(--accent)]">
+                <option>All time</option>
+                <option>This week</option>
+                <option>Today</option>
+              </select>
+            </div>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-3">
-            {/* Breakouts */}
-            <div className="rounded-[16px] border border-[color:var(--border)] bg-white p-6 shadow-sm">
-              <div className="mb-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent-2)]">
-                  🚀 Accelerating
-                </p>
-                <p className="mt-2 text-lg font-semibold text-[color:var(--ink)]">Models Gaining Traction</p>
-              </div>
-              <p className="text-sm text-[color:var(--muted)]">
-                {breakoutFocus.length > 0
-                  ? `${breakoutFocus.length} models breaking out this week`
-                  : "Watch for models that are accelerating"}
-              </p>
-              <div className="mt-4 space-y-2 border-t border-[color:var(--border)] pt-4">
-                {breakoutFocus.map((model) => (
-                  <Link
+          {/* Leaderboard Table */}
+          <div className="overflow-x-auto rounded-[16px] border border-[color:var(--border)] bg-white shadow-sm">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-[color:var(--border)]">
+                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
+                    Rank
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
+                    Model
+                  </th>
+                  <th className="hidden px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)] sm:table-cell">
+                    Velocity
+                  </th>
+                  <th className="hidden px-6 py-4 text-right text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)] lg:table-cell">
+                    Lift
+                  </th>
+                  <th className="hidden px-6 py-4 text-right text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)] lg:table-cell">
+                    Momentum
+                  </th>
+                  <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {frontierModels.slice(0, 10).map((model, idx) => (
+                  <tr
                     key={model.id}
-                    href={`/models/${model.id}`}
-                    className="group block rounded-lg border border-transparent px-3 py-2 text-sm font-medium text-[color:var(--accent)] transition hover:border-[color:var(--border)] hover:bg-[color:var(--paper-2)]"
+                    className="border-b border-[color:var(--border)] transition hover:bg-[color:var(--paper-2)]"
                   >
-                    <span className="group-hover:underline">{model.id}</span>
-                    <span className="ml-2 text-xs text-[color:var(--muted)]">
-                      +{formatNumber(model.acceleration, 0)}%
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* New Models */}
-            <div className="rounded-[16px] border border-[color:var(--border)] bg-white p-6 shadow-sm">
-              <div className="mb-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent-3)]">
-                  ✨ New
-                </p>
-                <p className="mt-2 text-lg font-semibold text-[color:var(--ink)]">Fresh Arrivals</p>
-              </div>
-              <p className="text-sm text-[color:var(--muted)]">
-                {newFocus.length > 0 ? `${newFocus.length} models debuted this week` : "First look at new models"}
-              </p>
-              <div className="mt-4 space-y-2 border-t border-[color:var(--border)] pt-4">
-                {newFocus.map((model) => (
-                  <Link
-                    key={model.id}
-                    href={`/models/${model.id}`}
-                    className="group block rounded-lg border border-transparent px-3 py-2 text-sm font-medium text-[color:var(--accent)] transition hover:border-[color:var(--border)] hover:bg-[color:var(--paper-2)]"
-                  >
-                    <span className="group-hover:underline">{model.id}</span>
-                    <span className="ml-2 text-xs text-[color:var(--muted)]">
-                      {formatNumber(model.velocity, 1)}/day
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Signal Briefing */}
-            <div className="rounded-[16px] border border-[color:var(--border)] bg-white p-6 shadow-sm">
-              <div className="mb-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
-                  📊 Signals
-                </p>
-                <p className="mt-2 text-lg font-semibold text-[color:var(--ink)]">Momentum Briefing</p>
-              </div>
-              {coolingCategory || trendingCategory ? (
-                <p className="text-sm text-[color:var(--muted)]">
-                  {coolingCategory && (
-                    <>
-                      <span className="font-medium text-[color:var(--ink)]">{coolingCategory}</span> is cooling — shift
-                      coming?
-                    </>
-                  )}
-                  {trendingCategory && !coolingCategory && (
-                    <>
-                      <span className="font-medium text-[color:var(--ink)]">{trendingCategory}</span> is the hottest
-                      category right now
-                    </>
-                  )}
-                </p>
-              ) : (
-                <p className="text-sm text-[color:var(--muted)]">Building signal data... Check back soon</p>
-              )}
-              <div className="mt-4 flex flex-wrap gap-2 border-t border-[color:var(--border)] pt-4">
-                {trendingList.slice(0, 3).map((tag) => (
-                  <Link
-                    key={tag}
-                    href={`/categories/${tag}`}
-                    className="rounded-full border border-[color:var(--border)] bg-[color:var(--paper-2)] px-3 py-1 text-xs font-medium text-[color:var(--muted)] transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
-                  >
-                    {tagLabelMap[tag] ?? tag}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Frontier Models - The Main Event */}
-        <section className="border-y border-[color:var(--border)] py-16">
-          <div className="mb-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent)]">Top Tier</p>
-            <h2 className="mt-2 text-3xl font-bold text-[color:var(--ink)]">Models you should know about</h2>
-            <p className="mt-2 text-[color:var(--muted)]">Ranked by frontier score — what really matters</p>
-          </div>
-
-          <div className="space-y-3">
-            {frontierModels.map((model, idx) => (
-              <Link
-                key={model.id}
-                href={`/models/${model.id}`}
-                className="group relative overflow-hidden rounded-[16px] border border-[color:var(--border)] bg-white shadow-sm transition hover:border-[color:var(--accent)] hover:shadow-md"
-              >
-                <div className="flex items-center justify-between gap-6 p-6">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--paper-2)] text-sm font-bold text-[color:var(--ink)]">
+                    <td className="px-6 py-4">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[color:var(--paper-2)] font-bold text-[color:var(--ink)]">
                         {idx + 1}
                       </span>
+                    </td>
+                    <td className="px-6 py-4">
                       <div>
-                        <h3 className="font-semibold text-[color:var(--ink)] group-hover:text-[color:var(--accent)]">
-                          {model.id}
-                        </h3>
-                        <p className="mt-1 text-xs text-[color:var(--muted)]">
-                          {formatNumber(model.velocity, 1)} downloads/day •{" "}
-                          <span className="font-medium text-[color:var(--accent-2)]">
-                            {formatNumber(model.lift, 1)}x lift
-                          </span>
-                        </p>
+                        <p className="font-semibold text-[color:var(--ink)]">{model.id}</p>
+                        <p className="mt-0.5 text-xs text-[color:var(--muted)]">{model.trendLabel}</p>
                       </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <div className="hidden flex-col items-end sm:flex">
-                      <Badge variant="secondary">{model.trendLabel}</Badge>
-                      <p className="mt-2 text-xs text-[color:var(--muted)]">
-                        {formatNumber(model.momentumRatio * 100, 0)}% momentum
-                      </p>
-                    </div>
-                    <Button variant="outline" size="sm">
-                      View Details
-                    </Button>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                    </td>
+                    <td className="hidden px-6 py-4 sm:table-cell">
+                      <p className="font-semibold text-[color:var(--ink)]">{formatNumber(model.velocity, 1)}</p>
+                      <p className="text-xs text-[color:var(--muted)]">/day</p>
+                    </td>
+                    <td className="hidden px-6 py-4 text-right lg:table-cell">
+                      <span className="inline-block rounded-full bg-[color:var(--paper-2)] px-3 py-1 font-semibold text-[color:var(--accent-2)]">
+                        {formatNumber(model.lift, 1)}x
+                      </span>
+                    </td>
+                    <td className="hidden px-6 py-4 text-right lg:table-cell">
+                      <p className="font-medium text-[color:var(--ink)]">{formatNumber(model.momentumRatio * 100, 0)}%</p>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <Button variant="outline" size="sm" asChild>
+                        <Link href={`/models/${model.id}`}>View</Link>
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          <Button asChild variant="outline" className="mt-8 w-full">
-            <Link href="/trends">Explore Full Leaderboard →</Link>
+          <Button asChild variant="outline" className="mt-6 w-full">
+            <Link href="/trends">View All {frontierModels.length} Models →</Link>
           </Button>
         </section>
 
-        {/* Research & Implementation */}
-        <section className="py-16">
-          <div className="grid gap-8 lg:grid-cols-2">
-            {/* Papers */}
-            <div>
-              <div className="mb-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent)]">
-                  Research
-                </p>
-                <h3 className="mt-2 text-2xl font-bold text-[color:var(--ink)]">Latest from arXiv</h3>
+        {/* Quick Stats */}
+        <section className="border-t border-[color:var(--border)] py-12">
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="rounded-[14px] border border-[color:var(--border)] bg-white p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
+                🚀 Breakouts
+              </p>
+              <p className="mt-3 text-3xl font-bold text-[color:var(--accent-2)]">{breakoutFocus.length}</p>
+              <div className="mt-3 space-y-1">
+                {breakoutFocus.map((m) => (
+                  <Link key={m.id} href={`/models/${m.id}`} className="block text-sm text-[color:var(--accent)] hover:underline">
+                    {m.id}
+                  </Link>
+                ))}
               </div>
-              {leadPaper ? (
-                <div className="rounded-[16px] border border-[color:var(--border)] bg-white shadow-sm">
-                  <PaperBridgeCard
-                    paper={leadPaper.paper}
-                    repos={leadPaper.repos}
-                    citations={leadPaper.citations}
-                  />
-                </div>
-              ) : (
-                <div className="rounded-[14px] border border-[color:var(--border)] bg-[color:var(--paper-2)] p-8 text-center">
-                  <p className="text-sm text-[color:var(--muted)]">Loading latest papers...</p>
-                </div>
-              )}
-              <Button asChild variant="outline" className="mt-4 w-full">
-                <Link href="/papers">More Papers →</Link>
-              </Button>
             </div>
 
-            {/* Deployable */}
-            <div>
-              <div className="mb-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent)]">
-                  Ready to Use
-                </p>
-                <h3 className="mt-2 text-2xl font-bold text-[color:var(--ink)]">Frontier models you can run</h3>
+            <div className="rounded-[14px] border border-[color:var(--border)] bg-white p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
+                ✨ New
+              </p>
+              <p className="mt-3 text-3xl font-bold text-[color:var(--accent-3)]">{newFocus.length}</p>
+              <div className="mt-3 space-y-1">
+                {newFocus.map((m) => (
+                  <Link key={m.id} href={`/models/${m.id}`} className="block text-sm text-[color:var(--accent)] hover:underline">
+                    {m.id}
+                  </Link>
+                ))}
               </div>
-              <div className="rounded-[16px] border border-[color:var(--border)] bg-white p-6 shadow-sm">
-                <p className="text-3xl font-bold text-[color:var(--accent)]">{deployableModels.length}</p>
-                <p className="mt-2 text-sm text-[color:var(--muted)]">
-                  Top models with live inference endpoints, quantized versions, or commercial APIs ready to go
-                </p>
-                <div className="mt-4 flex flex-wrap gap-2 border-t border-[color:var(--border)] pt-4">
-                  {deployableModels.slice(0, 3).map((model) => (
-                    <Link
-                      key={model.id}
-                      href={`/models/${model.id}`}
-                      className="rounded-lg border border-[color:var(--border)] bg-[color:var(--paper-2)] px-3 py-2 text-xs font-medium text-[color:var(--ink)] transition hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
-                    >
-                      {model.id}
-                    </Link>
-                  ))}
-                  {deployableModels.length > 3 && (
-                    <div className="rounded-lg border border-[color:var(--border)] bg-[color:var(--paper-2)] px-3 py-2 text-xs font-medium text-[color:var(--muted)]">
-                      +{deployableModels.length - 3} more
-                    </div>
-                  )}
-                </div>
-              </div>
+            </div>
+
+            <div className="rounded-[14px] border border-[color:var(--border)] bg-white p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
+                📚 Research
+              </p>
+              <p className="mt-3 text-3xl font-bold text-[color:var(--ink)]">{paperBridge.length}</p>
+              <p className="mt-3 text-sm text-[color:var(--muted)]">Latest papers with code links</p>
+              <Button variant="outline" size="sm" asChild className="mt-3 w-full">
+                <Link href="/papers">View Papers</Link>
+              </Button>
             </div>
           </div>
         </section>
 
         {/* Charts */}
-        <section className="border-t border-[color:var(--border)] py-16">
-          <div className="mb-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent)]">
-              Momentum Signals
-            </p>
-            <h2 className="mt-2 text-3xl font-bold text-[color:var(--ink)]">
-              {showDaily ? "What shifted today" : "Baseline momentum"}
+        <section className="border-t border-[color:var(--border)] py-12">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-[color:var(--ink)]">
+              {showDaily ? "Daily Changes" : "Momentum Signals"}
             </h2>
-            <p className="mt-2 text-[color:var(--muted)]">
-              {showDaily
-                ? "Real day-over-day velocity changes — see the shifts as they happen"
-                : "Initial breakout velocity vs. historical baseline — early indicators of strength"}
-            </p>
           </div>
           <div className="rounded-[16px] border border-[color:var(--border)] bg-white p-6 shadow-sm">
             {showDaily ? <DailyDeltaChart models={scored} /> : <LiftLadderChart models={scored} />}
@@ -394,23 +274,11 @@ export default async function HomePage() {
         </section>
 
         {/* Categories */}
-        <section className="border-t border-[color:var(--border)] py-16">
-          <div className="mb-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[color:var(--accent)]">Categories</p>
-            <h2 className="mt-2 text-3xl font-bold text-[color:var(--ink)]">Which domains are accelerating</h2>
+        <section className="border-t border-[color:var(--border)] py-12">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-[color:var(--ink)]">By Category</h2>
           </div>
           <CategoryPanel groups={groups} />
-        </section>
-
-        {/* CTA Section */}
-        <section className="border-t border-[color:var(--border)] py-16 text-center">
-          <h2 className="text-3xl font-bold text-[color:var(--ink)]">Stay ahead of the frontier</h2>
-          <p className="mt-4 text-lg text-[color:var(--muted)]">
-            Bookmark this. Check it daily. Know what matters before everyone else.
-          </p>
-          <Button size="lg" asChild className="mt-8">
-            <Link href="/trends">Dive into the data →</Link>
-          </Button>
         </section>
       </div>
     </div>
