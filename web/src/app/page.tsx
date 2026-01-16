@@ -1,5 +1,7 @@
 import Masthead from "@/components/Masthead";
 import Leaderboard from "@/components/Leaderboard";
+import TrendsHero from "@/components/TrendsHero";
+import ChartCard from "@/components/ChartCard";
 import PaperBridgeCard from "@/components/PaperBridgeCard";
 import CategoryPanel from "@/components/CategoryPanel";
 import LiftLadderChart from "@/components/charts/LiftLadderChart";
@@ -173,15 +175,59 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Charts */}
+        {/* Trends Hero Stats */}
         <section className="border-t border-[color:var(--border)] py-12">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-[color:var(--ink)]">
-              {showDaily ? "Daily Changes" : "Momentum Signals"}
-            </h2>
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-[color:var(--ink)]">Frontier at a glance</h2>
+            <p className="mt-2 text-[color:var(--muted)]">Key metrics across all models</p>
           </div>
-          <div className="rounded-[16px] border border-[color:var(--border)] bg-white p-6 shadow-sm">
-            {showDaily ? <DailyDeltaChart models={scored} /> : <LiftLadderChart models={scored} />}
+          <TrendsHero models={scored} />
+        </section>
+
+        {/* Charts Grid */}
+        <section className="border-t border-[color:var(--border)] py-12">
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-[color:var(--ink)]">Momentum & Velocity</h2>
+            <p className="mt-2 text-[color:var(--muted)]">Understanding the trends</p>
+          </div>
+          <div className="grid gap-6 lg:grid-cols-2">
+            <ChartCard
+              icon="⚡"
+              title={showDaily ? "Daily Acceleration" : "Lift Ranking"}
+              description={
+                showDaily
+                  ? "Which models shifted the most today"
+                  : "Initial breakout velocity vs historical baseline"
+              }
+              gradient="from-blue-50 to-blue-100/30"
+            >
+              {showDaily ? <DailyDeltaChart models={scored} /> : <LiftLadderChart models={scored} />}
+            </ChartCard>
+
+            <ChartCard
+              icon="🔥"
+              title="Top Movers"
+              description="Models with highest momentum this period"
+              gradient="from-orange-50 to-orange-100/30"
+            >
+              <div className="space-y-3">
+                {scored
+                  .sort((a, b) => b.momentumRatio - a.momentumRatio)
+                  .slice(0, 8)
+                  .map((model, idx) => (
+                    <div key={model.id} className="flex items-center justify-between rounded-lg border border-orange-200 bg-white p-3">
+                      <div>
+                        <p className="font-semibold text-[color:var(--ink)]">{model.id}</p>
+                        <p className="text-xs text-[color:var(--muted)]">{model.trendLabel}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-orange-600">{formatNumber(model.momentumRatio * 100, 0)}%</p>
+                        <p className="text-xs text-[color:var(--muted)]">momentum</p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </ChartCard>
           </div>
         </section>
 
